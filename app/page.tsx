@@ -1,15 +1,19 @@
+import { App } from "octokit";
+
 async function getData() {
-  let id = Math.floor(Math.random() * 100) + 1;
-  let res = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`);
-  let data = await res.json();
-  return data;
+  let app = new App({
+    appId: process.env.GITHUB_APP_ID!,
+    privateKey: process.env.GITHUB_APP_SECRET!,
+  });
+  let data = await app.octokit.request("/app");
+  return data.data;
 }
 
 export default async function Home() {
   let data = await getData();
   return (
     <main>
-      <div>Title: {data.title}</div>
+      <div>App name: {data.name}</div>
     </main>
   );
 }
